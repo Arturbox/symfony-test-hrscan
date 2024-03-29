@@ -5,7 +5,17 @@ namespace App\Entity;
 use App\Repository\AccountRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema(
+    title: "Account",
+    description: "Account entity",
+    properties: [
+        new OA\Property(property: "id", type: "integer", example: 1),
+        new OA\Property(property: "amount", type: "float", example: 100),
+        new OA\Property(property: "currency", ref: "#/components/schemas/Currency"),
+    ]
+)]
 #[ORM\Entity(repositoryClass: AccountRepository::class)]
 #[ORM\Table(name: 'accounts')]
 #[ORM\UniqueConstraint(name: 'account_client_id_currency_id_unique', columns: ['client_id', 'currency_id'])]

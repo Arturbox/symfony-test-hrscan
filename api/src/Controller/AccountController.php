@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Attribute\Route;
+use OpenApi\Attributes as OA;
 
 #[Route(path: "api/accounts", name: "api_accounts_")]
 class AccountController extends AbstractController
@@ -25,6 +26,29 @@ class AccountController extends AbstractController
 
 
     #[Route(path: "", name: "all", methods: ["GET"])]
+    #[OA\Response(
+        response: 200,
+        description: "Return accounts",
+        content: [
+            "application/json" => new OA\JsonContent(
+                properties: [
+                    new OA\Property(
+                        property: "message",
+                        type: "string",
+                        example: "success"
+                    ),
+                    new OA\Property(
+                        property: "data",
+                        type: "array",
+                        items: new OA\Items(
+                            ref: "#/components/schemas/Account"
+                        )
+                    )
+                ],
+                type: "object"
+            )
+        ]
+    )]
     public function all(): Response
     {
         $data = $this->repository->findAll();
@@ -37,6 +61,29 @@ class AccountController extends AbstractController
 
 
     #[Route(path: "/{id}", name: "byId", methods: ["GET"])]
+    #[OA\Response(
+        response: 200,
+        description: "Return accounts",
+        content: [
+            "application/json" => new OA\JsonContent(
+                properties: [
+                    new OA\Property(
+                        property: "message",
+                        type: "string",
+                        example: "success"
+                    ),
+                    new OA\Property(
+                        property: "data",
+                        ref: "#/components/schemas/Account"
+                    )
+                ],
+                type: "object"
+            )
+        ]
+    )]
+    #[OA\Parameter(
+        name: "id", required: true, in: "path", schema: new OA\Schema(type: "integer"), example: 1
+    )]
     function getById(int $id): Response
     {
         return $this->json([
@@ -46,6 +93,29 @@ class AccountController extends AbstractController
     }
 
     #[Route(path: "/{id}", name: "update", methods: ["PUT"])]
+    #[OA\Response(
+        response: 200,
+        description: "Return accounts",
+        content: [
+            "application/json" => new OA\JsonContent(
+                properties: [
+                    new OA\Property(
+                        property: "message",
+                        type: "string",
+                        example: "success"
+                    ),
+                    new OA\Property(
+                        property: "data",
+                        ref: "#/components/schemas/Account"
+                    )
+                ],
+                type: "object"
+            )
+        ]
+    )]
+    #[OA\Parameter(
+        name: "id", required: true, in: "path", schema: new OA\Schema(type: "integer"), example: 1
+    )]
     public function update(
         int                                                     $id,
         #[MapRequestPayload] AccountDto                         $accountDto,
@@ -71,6 +141,44 @@ class AccountController extends AbstractController
     }
 
     #[Route(path: "", name: "create", methods: ["POST"])]
+    #[OA\Response(
+        response: 200,
+        description: "Return accounts",
+        content: [
+            "application/json" => new OA\JsonContent(
+                properties: [
+                    new OA\Property(
+                        property: "message",
+                        type: "string",
+                        example: "success"
+                    ),
+                    new OA\Property(
+                        property: "data",
+                        ref: "#/components/schemas/Account"
+                    )
+                ],
+                type: "object"
+            )
+        ]
+    )]
+    #[OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            required: ['currency_id', 'amount'],
+            properties: [
+                new OA\Property(
+                    property: "currency_id",
+                    type: "integer",
+                    example: 1
+                ),
+                new OA\Property(
+                    property: "amount",
+                    type: "float",
+                    example: 1000
+                ),
+            ]
+        )
+    )]
     public function create(
         #[MapRequestPayload] AccountDto                          $accountDto,
         #[ValueResolver(CurrencyValueResolver::class)] ?Currency $currency
@@ -86,6 +194,25 @@ class AccountController extends AbstractController
     }
 
     #[Route(path: "/{id}", name: "delete", methods: ["DELETE"])]
+    #[OA\Response(
+        response: 200,
+        description: "Return accounts",
+        content: [
+            "application/json" => new OA\JsonContent(
+                properties: [
+                    new OA\Property(
+                        property: "message",
+                        type: "string",
+                        example: "success"
+                    )
+                ],
+                type: "object"
+            )
+        ]
+    )]
+    #[OA\Parameter(
+        name: "id", required: true, in: "path", schema: new OA\Schema(type: "integer"), example: 1
+    )]
     public function delete(
         #[MapEntity(id: 'id')] Account $account
     ): Response

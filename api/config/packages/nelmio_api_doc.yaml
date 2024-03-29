@@ -1,5 +1,8 @@
 nelmio_api_doc:
     documentation:
+        schemes:
+            components:
+                Account: {}
         info:
             title: My App
             description: This is an awesome app!
@@ -7,3 +10,7 @@ nelmio_api_doc:
     areas: # to filter documented areas
         path_patterns:
             - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+    models:
+        use_jms: false
+        names:
+            - { alias: Account,  type: App\Entity\Account }
